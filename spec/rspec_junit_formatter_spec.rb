@@ -5,7 +5,10 @@ require "rspec_junit_formatter"
 describe RspecJunitFormatter do
   EXAMPLE_DIR = File.expand_path("../../example", __FILE__)
 
-  before(:all) { ENV.delete("TEST_ENV_NUMBER") } # Make sure this doesn't exist by default
+  before(:all) {
+    ENV.delete("TEST_ENV_NUMBER") # Make sure this doesn't exist by default
+    ENV['TEST_CLASSNAME_PREFIX'] = 'prefix'
+  }
   let(:extra_arguments) { [] }
   subject(:output) { IO.popen(["bundle", "exec", "rspec", "--format", "RspecJunitFormatter", *extra_arguments], chdir: EXAMPLE_DIR, &:read) }
 
@@ -39,6 +42,7 @@ describe RspecJunitFormatter do
 
     testcases.each do |testcase|
       expect(testcase["classname"]).not_to be_empty
+      expect(testcase["classname"]).to include("prefix")
       expect(testcase["name"]).not_to be_empty
       expect(testcase["time"].to_f).to be > 0
     end
