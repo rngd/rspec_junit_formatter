@@ -33,7 +33,8 @@ private
 
   def classname_for(example)
     fp = example_group_file_path_for(example)
-    fp.sub(%r{\.[^/.]+\Z}, "").gsub("/", ".").gsub(/\A\.+|\.+\Z/, "")
+    fp = fp.sub(%r{\.[^/.]+\Z}, "").gsub("/", ".").gsub(/\A\.+|\.+\Z/, "")
+    ENV['TEST_CLASSNAME_PREFIX'] ? "#{ENV['TEST_CLASSNAME_PREFIX']}.#{fp}" : fp
   end
 
   def duration_for(example)

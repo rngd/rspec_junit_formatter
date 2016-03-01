@@ -19,6 +19,7 @@ describe RspecJunitFormatter do
   before(:all) do
     Dir.chdir EXAMPLE_DIR do
       ENV['TEST_ENV_NUMBER'] = '2'
+      ENV['TEST_CLASSNAME_PREFIX'] = 'prefix'
       system "bundle", "exec", "rspec"
     end
   end
@@ -43,6 +44,12 @@ describe RspecJunitFormatter do
       expect(testcase["classname"]).not_to be_empty
       expect(testcase["name"]).not_to be_empty
       expect(testcase["time"].to_f).to be > 0
+    end
+  end
+
+  it "uses customized classname prefix" do
+    testcases.each do |testcase|
+      expect(testcase["classname"]).to include("prefix")
     end
   end
 
